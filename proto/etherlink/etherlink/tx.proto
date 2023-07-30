@@ -1,0 +1,7 @@
+syntax = "proto3";
+package etherlink.etherlink;
+
+option go_package = "etherlink/x/etherlink/types";
+
+// Msg defines the Msg service.
+service Msg {}
