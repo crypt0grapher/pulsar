@@ -1,0 +1,15 @@
+version: '3'
+services:
+  etherlink:
+    build:
+      context: .
+      dockerfile: Light.Dockerfile
+      args:
+        - ETH_RPC_URL=${ETH_RPC_URL}
+    env_file:
+      - .env
+    ports:
+      - "8545:8545"
+      - "9545:9545"
+      - "8546:8546"
+      - "26656:26656"

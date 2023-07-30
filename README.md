@@ -16,8 +16,9 @@ The solution consists of following components:
         - Verifying Merkle proofs.
         - Sending verified data to **Ethereum State Storage** for storage.
     - _Prototype simplification:_ an extremely robust external Ethereum Light
-      Client ([helios](https://github.com/a16z/helios)) is used as a part of the bundle. It is not integrated with the
-      Cosmos SDK Chain, and runs as a separate process on the same machine communicating with the chain via unix socket.
+      Client ([helios](https://github.com/a16z/helios)) is used currently running as a separate process on the same
+      machine. It is queried by the application via JSON-RPC block's Merkle root (`transactionsRoot`)
+      with `eth_getBlockByNumber`.
 2. **Ethereum Relay.**
     - _Objective:_ submitting Ethereum state update proposals to the Cosmos SDK Chain.
     - _Responsibilities._
@@ -68,8 +69,12 @@ sequenceDiagram
 ```
 
 ## Usage
-
+Copy `.env.example` to `.env` and set the environment variables.
+```shell
+ETH_RPC_URL=http://127.0.0.1:8545
 ```
+NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against, so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own node.
+```shell
 docker-compose up
 ```
 
