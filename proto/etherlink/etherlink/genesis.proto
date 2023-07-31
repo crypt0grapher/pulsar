@@ -1,16 +1,12 @@
 syntax = "proto3";
-
 package etherlink.etherlink;
 
 import "gogoproto/gogo.proto";
 import "etherlink/etherlink/params.proto";
-import "etherlink/etherlink/eth_state.proto";
 
 option go_package = "etherlink/x/etherlink/types";
 
 // GenesisState defines the etherlink module's genesis state.
 message GenesisState {
-  Params   params   = 1 [(gogoproto.nullable) = false];
-  EthState ethState = 2;
+  Params params = 1 [(gogoproto.nullable) = false];
 }
-

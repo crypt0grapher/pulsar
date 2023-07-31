@@ -23,19 +23,7 @@ var (
 )
 
 const (
-	opWeightMsgCreateEthState = "op_weight_msg_eth_state"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateEthState int = 100
-
-	opWeightMsgUpdateEthState = "op_weight_msg_eth_state"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateEthState int = 100
-
-	opWeightMsgDeleteEthState = "op_weight_msg_eth_state"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteEthState int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
+// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module.
@@ -63,39 +51,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgCreateEthState int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateEthState, &weightMsgCreateEthState, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateEthState = defaultWeightMsgCreateEthState
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateEthState,
-		etherlinksimulation.SimulateMsgCreateEthState(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgUpdateEthState int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateEthState, &weightMsgUpdateEthState, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateEthState = defaultWeightMsgUpdateEthState
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateEthState,
-		etherlinksimulation.SimulateMsgUpdateEthState(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteEthState int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteEthState, &weightMsgDeleteEthState, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteEthState = defaultWeightMsgDeleteEthState
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteEthState,
-		etherlinksimulation.SimulateMsgDeleteEthState(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
@@ -104,30 +59,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 // ProposalMsgs returns msgs used for governance proposals for simulations.
 func (am AppModule) ProposalMsgs(simState module.SimulationState) []simtypes.WeightedProposalMsg {
 	return []simtypes.WeightedProposalMsg{
-		simulation.NewWeightedProposalMsg(
-			opWeightMsgCreateEthState,
-			defaultWeightMsgCreateEthState,
-			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
-				etherlinksimulation.SimulateMsgCreateEthState(am.accountKeeper, am.bankKeeper, am.keeper)
-				return nil
-			},
-		),
-		simulation.NewWeightedProposalMsg(
-			opWeightMsgUpdateEthState,
-			defaultWeightMsgUpdateEthState,
-			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
-				etherlinksimulation.SimulateMsgUpdateEthState(am.accountKeeper, am.bankKeeper, am.keeper)
-				return nil
-			},
-		),
-		simulation.NewWeightedProposalMsg(
-			opWeightMsgDeleteEthState,
-			defaultWeightMsgDeleteEthState,
-			func(r *rand.Rand, ctx sdk.Context, accs []simtypes.Account) sdk.Msg {
-				etherlinksimulation.SimulateMsgDeleteEthState(am.accountKeeper, am.bankKeeper, am.keeper)
-				return nil
-			},
-		),
 		// this line is used by starport scaffolding # simapp/module/OpMsg
 	}
 }
