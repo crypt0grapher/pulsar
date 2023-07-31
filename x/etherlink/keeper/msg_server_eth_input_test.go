@@ -12,34 +12,34 @@ import (
 	"etherlink/x/etherlink/types"
 )
 
-func TestEthStateMsgServerCreate(t *testing.T) {
+func TestEthInputMsgServerCreate(t *testing.T) {
 	k, ctx := keepertest.EtherlinkKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := "A"
-	expected := &types.MsgCreateEthState{Creator: creator}
-	_, err := srv.CreateEthState(wctx, expected)
+	expected := &types.MsgCreateEthInput{Creator: creator}
+	_, err := srv.CreateEthInput(wctx, expected)
 	require.NoError(t, err)
-	rst, found := k.GetEthState(ctx)
+	rst, found := k.GetEthInput(ctx)
 	require.True(t, found)
 	require.Equal(t, expected.Creator, rst.Creator)
 }
 
-func TestEthStateMsgServerUpdate(t *testing.T) {
+func TestEthInputMsgServerUpdate(t *testing.T) {
 	creator := "A"
 
 	tests := []struct {
 		desc    string
-		request *types.MsgUpdateEthState
+		request *types.MsgUpdateEthInput
 		err     error
 	}{
 		{
 			desc:    "Completed",
-			request: &types.MsgUpdateEthState{Creator: creator},
+			request: &types.MsgUpdateEthInput{Creator: creator},
 		},
 		{
 			desc:    "Unauthorized",
-			request: &types.MsgUpdateEthState{Creator: "B"},
+			request: &types.MsgUpdateEthInput{Creator: "B"},
 			err:     sdkerrors.ErrUnauthorized,
 		},
 	}
@@ -48,16 +48,16 @@ func TestEthStateMsgServerUpdate(t *testing.T) {
 			k, ctx := keepertest.EtherlinkKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
-			expected := &types.MsgCreateEthState{Creator: creator}
-			_, err := srv.CreateEthState(wctx, expected)
+			expected := &types.MsgCreateEthInput{Creator: creator}
+			_, err := srv.CreateEthInput(wctx, expected)
 			require.NoError(t, err)
 
-			_, err = srv.UpdateEthState(wctx, tc.request)
+			_, err = srv.UpdateEthInput(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
 				require.NoError(t, err)
-				rst, found := k.GetEthState(ctx)
+				rst, found := k.GetEthInput(ctx)
 				require.True(t, found)
 				require.Equal(t, expected.Creator, rst.Creator)
 			}
@@ -65,21 +65,21 @@ func TestEthStateMsgServerUpdate(t *testing.T) {
 	}
 }
 
-func TestEthStateMsgServerDelete(t *testing.T) {
+func TestEthInputMsgServerDelete(t *testing.T) {
 	creator := "A"
 
 	tests := []struct {
 		desc    string
-		request *types.MsgDeleteEthState
+		request *types.MsgDeleteEthInput
 		err     error
 	}{
 		{
 			desc:    "Completed",
-			request: &types.MsgDeleteEthState{Creator: creator},
+			request: &types.MsgDeleteEthInput{Creator: creator},
 		},
 		{
 			desc:    "Unauthorized",
-			request: &types.MsgDeleteEthState{Creator: "B"},
+			request: &types.MsgDeleteEthInput{Creator: "B"},
 			err:     sdkerrors.ErrUnauthorized,
 		},
 	}
@@ -89,14 +89,14 @@ func TestEthStateMsgServerDelete(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			_, err := srv.CreateEthState(wctx, &types.MsgCreateEthState{Creator: creator})
+			_, err := srv.CreateEthInput(wctx, &types.MsgCreateEthInput{Creator: creator})
 			require.NoError(t, err)
-			_, err = srv.DeleteEthState(wctx, tc.request)
+			_, err = srv.DeleteEthInput(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
 				require.NoError(t, err)
-				_, found := k.GetEthState(ctx)
+				_, found := k.GetEthInput(ctx)
 				require.False(t, found)
 			}
 		})

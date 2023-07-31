@@ -7,6 +7,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "etherlink/etherlink/params.proto";
 import "etherlink/etherlink/eth_state.proto";
+import "etherlink/etherlink/eth_input.proto";
 
 option go_package = "etherlink/x/etherlink/types";
 
@@ -24,6 +25,12 @@ service Query {
     option (google.api.http).get = "/etherlink/etherlink/eth_state";
   
   }
+  
+  // Queries a EthInput by index.
+  rpc EthInput (QueryGetEthInputRequest) returns (QueryGetEthInputResponse) {
+    option (google.api.http).get = "/etherlink/etherlink/eth_input";
+  
+  }
 }
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
@@ -39,5 +46,11 @@ message QueryGetEthStateRequest {}
 
 message QueryGetEthStateResponse {
   EthState EthState = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetEthInputRequest {}
+
+message QueryGetEthInputResponse {
+  EthInput EthInput = 1 [(gogoproto.nullable) = false];
 }
 

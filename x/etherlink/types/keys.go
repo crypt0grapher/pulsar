@@ -21,3 +21,7 @@ func KeyPrefix(p string) []byte {
 const (
 	EthStateKey = "EthState/value/"
 )
+
+const (
+	EthInputKey = "EthInput/value/"
+)

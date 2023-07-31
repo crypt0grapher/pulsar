@@ -1,0 +1,10 @@
+syntax = "proto3";
+package etherlink.etherlink;
+
+option go_package = "etherlink/x/etherlink/types";
+
+message EthInput {
+  string creator = 1;
+  string eth_address = 2;
+  string eth_slot = 3;
+}

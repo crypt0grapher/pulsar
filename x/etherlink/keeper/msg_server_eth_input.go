@@ -8,31 +8,31 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func (k msgServer) CreateEthState(goCtx context.Context, msg *types.MsgCreateEthState) (*types.MsgCreateEthStateResponse, error) {
+func (k msgServer) CreateEthInput(goCtx context.Context, msg *types.MsgCreateEthInput) (*types.MsgCreateEthInputResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetEthState(ctx)
+	_, isFound := k.GetEthInput(ctx)
 	if isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "already set")
 	}
 
-	var ethState = types.EthState{
+	var ethInput = types.EthInput{
 		Creator: msg.Creator,
 	}
 
-	k.SetEthState(
+	k.SetEthInput(
 		ctx,
-		ethState,
+		ethInput,
 	)
-	return &types.MsgCreateEthStateResponse{}, nil
+	return &types.MsgCreateEthInputResponse{}, nil
 }
 
-func (k msgServer) UpdateEthState(goCtx context.Context, msg *types.MsgUpdateEthState) (*types.MsgUpdateEthStateResponse, error) {
+func (k msgServer) UpdateEthInput(goCtx context.Context, msg *types.MsgUpdateEthInput) (*types.MsgUpdateEthInputResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value exists
-	valFound, isFound := k.GetEthState(ctx)
+	valFound, isFound := k.GetEthInput(ctx)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "not set")
 	}
@@ -42,20 +42,20 @@ func (k msgServer) UpdateEthState(goCtx context.Context, msg *types.MsgUpdateEth
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var ethState = types.EthState{
+	var ethInput = types.EthInput{
 		Creator: msg.Creator,
 	}
 
-	k.SetEthState(ctx, ethState)
+	k.SetEthInput(ctx, ethInput)
 
-	return &types.MsgUpdateEthStateResponse{}, nil
+	return &types.MsgUpdateEthInputResponse{}, nil
 }
 
-func (k msgServer) DeleteEthState(goCtx context.Context, msg *types.MsgDeleteEthState) (*types.MsgDeleteEthStateResponse, error) {
+func (k msgServer) DeleteEthInput(goCtx context.Context, msg *types.MsgDeleteEthInput) (*types.MsgDeleteEthInputResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value exists
-	valFound, isFound := k.GetEthState(ctx)
+	valFound, isFound := k.GetEthInput(ctx)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "not set")
 	}
@@ -65,7 +65,7 @@ func (k msgServer) DeleteEthState(goCtx context.Context, msg *types.MsgDeleteEth
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	k.RemoveEthState(ctx)
+	k.RemoveEthInput(ctx)
 
-	return &types.MsgDeleteEthStateResponse{}, nil
+	return &types.MsgDeleteEthInputResponse{}, nil
 }

@@ -8,21 +8,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreateEthState_ValidateBasic(t *testing.T) {
+func TestMsgCreateEthInput_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateEthState
+		msg  MsgCreateEthInput
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgCreateEthState{
+			msg: MsgCreateEthInput{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgCreateEthState{
+			msg: MsgCreateEthInput{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -39,21 +39,21 @@ func TestMsgCreateEthState_ValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgUpdateEthState_ValidateBasic(t *testing.T) {
+func TestMsgUpdateEthInput_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateEthState
+		msg  MsgUpdateEthInput
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgUpdateEthState{
+			msg: MsgUpdateEthInput{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgUpdateEthState{
+			msg: MsgUpdateEthInput{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -70,21 +70,21 @@ func TestMsgUpdateEthState_ValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgDeleteEthState_ValidateBasic(t *testing.T) {
+func TestMsgDeleteEthInput_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgDeleteEthState
+		msg  MsgDeleteEthInput
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgDeleteEthState{
+			msg: MsgDeleteEthInput{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgDeleteEthState{
+			msg: MsgDeleteEthInput{
 				Creator: sample.AccAddress(),
 			},
 		},

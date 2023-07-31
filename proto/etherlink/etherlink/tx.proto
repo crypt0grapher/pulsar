@@ -1,7 +1,32 @@
 syntax = "proto3";
+
 package etherlink.etherlink;
+
+import "etherlink/etherlink/eth_input.proto";
 
 option go_package = "etherlink/x/etherlink/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc CreateEthInput (MsgCreateEthInput) returns (MsgCreateEthInputResponse);
+  rpc UpdateEthInput (MsgUpdateEthInput) returns (MsgUpdateEthInputResponse);
+  rpc DeleteEthInput (MsgDeleteEthInput) returns (MsgDeleteEthInputResponse);
+}
+message MsgCreateEthInput {
+  string creator = 1;
+}
+
+message MsgCreateEthInputResponse {}
+
+message MsgUpdateEthInput {
+  string creator = 1;
+}
+
+message MsgUpdateEthInputResponse {}
+
+message MsgDeleteEthInput {
+  string creator = 1;
+}
+
+message MsgDeleteEthInputResponse {}
+

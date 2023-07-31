@@ -12,6 +12,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.EthState != nil {
 		k.SetEthState(ctx, *genState.EthState)
 	}
+	// Set if defined
+	if genState.EthInput != nil {
+		k.SetEthInput(ctx, *genState.EthInput)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -25,6 +29,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	ethState, found := k.GetEthState(ctx)
 	if found {
 		genesis.EthState = &ethState
+	}
+	// Get all ethInput
+	ethInput, found := k.GetEthInput(ctx)
+	if found {
+		genesis.EthInput = &ethInput
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

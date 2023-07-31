@@ -79,6 +79,12 @@ NB! Infura doesn't support `eth_getProof` method which is used to get block's ro
 docker-compose up
 ```
 
+User queries are available via the `query` command:
+Set address and slot to watch in Ethereum with `eth_input`
+Get the current value of the slot with `eth_state`
+```shell
+```
+
 ## Key Design Decisions
 
 - **The Light Client** is the choice to perform trustless validation of the fetched Ethereum state without storing the

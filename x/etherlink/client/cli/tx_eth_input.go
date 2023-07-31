@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func CmdCreateEthState() *cobra.Command {
+func CmdCreateEthInput() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-eth-state",
-		Short: "Create eth_state",
+		Use:   "create-eth-input",
+		Short: "Create ethInput",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -20,7 +20,7 @@ func CmdCreateEthState() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgCreateEthState(clientCtx.GetFromAddress().String())
+			msg := types.NewMsgCreateEthInput(clientCtx.GetFromAddress().String())
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -33,10 +33,10 @@ func CmdCreateEthState() *cobra.Command {
 	return cmd
 }
 
-func CmdUpdateEthState() *cobra.Command {
+func CmdUpdateEthInput() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-eth-state",
-		Short: "Update eth_state",
+		Use:   "update-eth-input",
+		Short: "Update ethInput",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -45,7 +45,7 @@ func CmdUpdateEthState() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateEthState(clientCtx.GetFromAddress().String())
+			msg := types.NewMsgUpdateEthInput(clientCtx.GetFromAddress().String())
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -58,10 +58,10 @@ func CmdUpdateEthState() *cobra.Command {
 	return cmd
 }
 
-func CmdDeleteEthState() *cobra.Command {
+func CmdDeleteEthInput() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-eth-state",
-		Short: "Delete eth_state",
+		Use:   "delete-eth-input",
+		Short: "Delete ethInput",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -69,7 +69,7 @@ func CmdDeleteEthState() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDeleteEthState(clientCtx.GetFromAddress().String())
+			msg := types.NewMsgDeleteEthInput(clientCtx.GetFromAddress().String())
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

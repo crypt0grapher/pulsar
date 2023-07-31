@@ -14,7 +14,7 @@ import (
 	"etherlink/x/etherlink/client/cli"
 )
 
-func TestCreateEthState(t *testing.T) {
+func TestCreateEthInput(t *testing.T) {
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -43,7 +43,7 @@ func TestCreateEthState(t *testing.T) {
 			var args []string
 			args = append(args, fields...)
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthState(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthInput(), args)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -57,7 +57,7 @@ func TestCreateEthState(t *testing.T) {
 	}
 }
 
-func TestUpdateEthState(t *testing.T) {
+func TestUpdateEthInput(t *testing.T) {
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -72,7 +72,7 @@ func TestUpdateEthState(t *testing.T) {
 	var args []string
 	args = append(args, fields...)
 	args = append(args, common...)
-	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthState(), args)
+	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthInput(), args)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -93,7 +93,7 @@ func TestUpdateEthState(t *testing.T) {
 			var args []string
 			args = append(args, fields...)
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdUpdateEthState(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdUpdateEthInput(), args)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -107,7 +107,7 @@ func TestUpdateEthState(t *testing.T) {
 	}
 }
 
-func TestDeleteEthState(t *testing.T) {
+func TestDeleteEthInput(t *testing.T) {
 	net := network.New(t)
 
 	val := net.Validators[0]
@@ -123,7 +123,7 @@ func TestDeleteEthState(t *testing.T) {
 	var args []string
 	args = append(args, fields...)
 	args = append(args, common...)
-	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthState(), args)
+	_, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdCreateEthInput(), args)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -141,7 +141,7 @@ func TestDeleteEthState(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			require.NoError(t, net.WaitForNextBlock())
 
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteEthState(), append([]string{}, tc.args...))
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdDeleteEthInput(), append([]string{}, tc.args...))
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

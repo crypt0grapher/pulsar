@@ -193,40 +193,125 @@ func (m *QueryGetEthStateResponse) GetEthState() EthState {
 	return EthState{}
 }
 
+type QueryGetEthInputRequest struct {
+}
+
+func (m *QueryGetEthInputRequest) Reset()         { *m = QueryGetEthInputRequest{} }
+func (m *QueryGetEthInputRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetEthInputRequest) ProtoMessage()    {}
+func (*QueryGetEthInputRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd78c672efb73f25, []int{4}
+}
+func (m *QueryGetEthInputRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetEthInputRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetEthInputRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetEthInputRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetEthInputRequest.Merge(m, src)
+}
+func (m *QueryGetEthInputRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetEthInputRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetEthInputRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetEthInputRequest proto.InternalMessageInfo
+
+type QueryGetEthInputResponse struct {
+	EthInput EthInput `protobuf:"bytes,1,opt,name=EthInput,proto3" json:"EthInput"`
+}
+
+func (m *QueryGetEthInputResponse) Reset()         { *m = QueryGetEthInputResponse{} }
+func (m *QueryGetEthInputResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetEthInputResponse) ProtoMessage()    {}
+func (*QueryGetEthInputResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bd78c672efb73f25, []int{5}
+}
+func (m *QueryGetEthInputResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetEthInputResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetEthInputResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetEthInputResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetEthInputResponse.Merge(m, src)
+}
+func (m *QueryGetEthInputResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetEthInputResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetEthInputResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetEthInputResponse proto.InternalMessageInfo
+
+func (m *QueryGetEthInputResponse) GetEthInput() EthInput {
+	if m != nil {
+		return m.EthInput
+	}
+	return EthInput{}
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "etherlink.etherlink.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "etherlink.etherlink.QueryParamsResponse")
 	proto.RegisterType((*QueryGetEthStateRequest)(nil), "etherlink.etherlink.QueryGetEthStateRequest")
 	proto.RegisterType((*QueryGetEthStateResponse)(nil), "etherlink.etherlink.QueryGetEthStateResponse")
+	proto.RegisterType((*QueryGetEthInputRequest)(nil), "etherlink.etherlink.QueryGetEthInputRequest")
+	proto.RegisterType((*QueryGetEthInputResponse)(nil), "etherlink.etherlink.QueryGetEthInputResponse")
 }
 
 func init() { proto.RegisterFile("etherlink/etherlink/query.proto", fileDescriptor_bd78c672efb73f25) }
 
 var fileDescriptor_bd78c672efb73f25 = []byte{
-	// 365 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4f, 0x4b, 0x02, 0x41,
-	0x18, 0xc6, 0x77, 0xa4, 0x24, 0xa6, 0xdb, 0x28, 0x64, 0x6b, 0x8e, 0xb2, 0x42, 0x49, 0xd4, 0x0e,
-	0x1a, 0x1d, 0x3a, 0x05, 0x42, 0x74, 0x35, 0xbb, 0xd5, 0x21, 0xc6, 0x18, 0xd6, 0x25, 0xdd, 0x59,
-	0x77, 0xc6, 0xc8, 0x5b, 0xf4, 0x05, 0x0a, 0xba, 0xf6, 0x81, 0x3c, 0x0a, 0x5d, 0x3a, 0x45, 0x68,
-	0x1f, 0x24, 0x9c, 0x99, 0xd5, 0xc2, 0xb5, 0xba, 0xbd, 0xbc, 0xef, 0xef, 0x7d, 0x9e, 0x67, 0xfe,
-	0xc0, 0x22, 0x93, 0x6d, 0x16, 0x75, 0xfc, 0xe0, 0x86, 0xcc, 0xab, 0x5e, 0x9f, 0x45, 0x03, 0x37,
-	0x8c, 0xb8, 0xe4, 0x28, 0x33, 0x6b, 0xbb, 0xb3, 0xca, 0xce, 0x7a, 0xdc, 0xe3, 0x6a, 0x4e, 0xa6,
-	0x95, 0x46, 0xed, 0x2d, 0x8f, 0x73, 0xaf, 0xc3, 0x08, 0x0d, 0x7d, 0x42, 0x83, 0x80, 0x4b, 0x2a,
-	0x7d, 0x1e, 0x08, 0x33, 0xdd, 0xbd, 0xe6, 0xa2, 0xcb, 0x05, 0x69, 0x51, 0xc1, 0xb4, 0x03, 0xb9,
-	0xad, 0xb6, 0x98, 0xa4, 0x55, 0x12, 0x52, 0xcf, 0x0f, 0x14, 0x6c, 0xd8, 0x52, 0x52, 0xaa, 0x90,
-	0x46, 0xb4, 0x1b, 0xab, 0x95, 0x93, 0x08, 0x26, 0xdb, 0x57, 0x42, 0x52, 0xc9, 0x34, 0xe4, 0x64,
-	0x21, 0x3a, 0x9b, 0x1a, 0x35, 0xd4, 0x66, 0x93, 0xf5, 0xfa, 0x4c, 0x48, 0xa7, 0x01, 0x33, 0x3f,
-	0xba, 0x22, 0xe4, 0x81, 0x60, 0xe8, 0x08, 0xa6, 0xb5, 0x43, 0x0e, 0x94, 0x40, 0x65, 0xbd, 0x96,
-	0x77, 0x13, 0x4e, 0xee, 0xea, 0xa5, 0xfa, 0xca, 0xf0, 0xbd, 0x68, 0x35, 0xcd, 0x82, 0xb3, 0x09,
-	0x37, 0x94, 0xe2, 0x29, 0x93, 0x27, 0xb2, 0x7d, 0x3e, 0x4d, 0x10, 0x9b, 0x5d, 0xc2, 0xdc, 0xe2,
-	0xc8, 0x38, 0x1e, 0xc3, 0xb5, 0xb8, 0x67, 0x3c, 0x0b, 0x89, 0x9e, 0x31, 0x64, 0x5c, 0x67, 0x4b,
-	0xb5, 0x97, 0x14, 0x5c, 0x55, 0xea, 0xe8, 0x1e, 0xc0, 0xb4, 0x8e, 0x86, 0x76, 0x12, 0x35, 0x16,
-	0xef, 0xc1, 0xae, 0xfc, 0x0d, 0xea, 0xa0, 0x4e, 0xf9, 0xe1, 0xf5, 0xf3, 0x39, 0x55, 0x40, 0x79,
-	0xb2, 0xfc, 0x5d, 0xd0, 0x23, 0x98, 0x1f, 0x07, 0xed, 0x2d, 0xd7, 0x5e, 0xbc, 0x24, 0x7b, 0xff,
-	0x9f, 0xb4, 0x89, 0xb3, 0xad, 0xe2, 0x94, 0x10, 0x26, 0xbf, 0x7e, 0x82, 0xfa, 0xe1, 0x70, 0x8c,
-	0xc1, 0x68, 0x8c, 0xc1, 0xc7, 0x18, 0x83, 0xa7, 0x09, 0xb6, 0x46, 0x13, 0x6c, 0xbd, 0x4d, 0xb0,
-	0x75, 0x91, 0x9f, 0xe3, 0x77, 0xdf, 0x56, 0xe5, 0x20, 0x64, 0xa2, 0x95, 0x56, 0x9f, 0xe7, 0xe0,
-	0x2b, 0x00, 0x00, 0xff, 0xff, 0xb3, 0x61, 0xd1, 0xe7, 0x1b, 0x03, 0x00, 0x00,
+	// 415 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x93, 0xcf, 0x4e, 0xfa, 0x40,
+	0x10, 0xc7, 0xdb, 0xdf, 0x1f, 0x62, 0xd6, 0xdb, 0x42, 0x22, 0x16, 0x29, 0xa4, 0x24, 0x4a, 0x8c,
+	0x76, 0x03, 0xc6, 0x83, 0x27, 0x13, 0x12, 0x63, 0xbc, 0x21, 0xde, 0xf4, 0x60, 0x16, 0xb3, 0x29,
+	0x8d, 0xd0, 0x2d, 0xdd, 0xc5, 0xc8, 0xcd, 0xf8, 0x02, 0x9a, 0xf8, 0x1e, 0x3e, 0x07, 0x47, 0x12,
+	0x2f, 0x9e, 0x8c, 0x01, 0x1f, 0xc4, 0x74, 0x77, 0xcb, 0x1f, 0x29, 0x96, 0xdb, 0x76, 0xe6, 0x3b,
+	0xf3, 0xfd, 0x74, 0x66, 0x17, 0x14, 0x08, 0x6f, 0x91, 0xa0, 0xed, 0x7a, 0xb7, 0x68, 0x7a, 0xea,
+	0xf6, 0x48, 0xd0, 0xb7, 0xfd, 0x80, 0x72, 0x0a, 0xd3, 0x93, 0xb0, 0x3d, 0x39, 0x19, 0x19, 0x87,
+	0x3a, 0x54, 0xe4, 0x51, 0x78, 0x92, 0x52, 0x63, 0xcb, 0xa1, 0xd4, 0x69, 0x13, 0x84, 0x7d, 0x17,
+	0x61, 0xcf, 0xa3, 0x1c, 0x73, 0x97, 0x7a, 0x4c, 0x65, 0x77, 0x6f, 0x28, 0xeb, 0x50, 0x86, 0x9a,
+	0x98, 0x11, 0xe9, 0x80, 0xee, 0x2a, 0x4d, 0xc2, 0x71, 0x05, 0xf9, 0xd8, 0x71, 0x3d, 0x21, 0x56,
+	0xda, 0x62, 0x1c, 0x95, 0x8f, 0x03, 0xdc, 0x89, 0xba, 0x95, 0xe2, 0x14, 0x84, 0xb7, 0xae, 0x19,
+	0xc7, 0x9c, 0x24, 0x89, 0x5c, 0xcf, 0xef, 0x71, 0x29, 0xb2, 0x32, 0x00, 0x9e, 0x87, 0x34, 0x75,
+	0xd1, 0xbe, 0x41, 0xba, 0x3d, 0xc2, 0xb8, 0x55, 0x07, 0xe9, 0xb9, 0x28, 0xf3, 0xa9, 0xc7, 0x08,
+	0x3c, 0x02, 0x29, 0x89, 0x91, 0xd5, 0x8b, 0x7a, 0x79, 0xbd, 0x9a, 0xb3, 0x63, 0xc6, 0x63, 0xcb,
+	0xa2, 0xda, 0xbf, 0xc1, 0x47, 0x41, 0x6b, 0xa8, 0x02, 0x6b, 0x13, 0x6c, 0x88, 0x8e, 0xa7, 0x84,
+	0x9f, 0xf0, 0xd6, 0x45, 0x88, 0x19, 0x99, 0x5d, 0x81, 0xec, 0x62, 0x4a, 0x39, 0x1e, 0x83, 0xb5,
+	0x28, 0xa6, 0x3c, 0xf3, 0xb1, 0x9e, 0x91, 0x48, 0xb9, 0x4e, 0x8a, 0x7e, 0xf8, 0x9e, 0x85, 0x7f,
+	0x1e, 0xef, 0xab, 0x52, 0x73, 0xbe, 0x22, 0x96, 0xe4, 0x2b, 0x44, 0x33, 0xbe, 0xe2, 0xbb, 0xfa,
+	0xfa, 0x17, 0xfc, 0x17, 0xdd, 0xe1, 0x83, 0x0e, 0x52, 0x72, 0x24, 0x70, 0x27, 0xb6, 0xc7, 0xe2,
+	0xfc, 0x8d, 0x72, 0xb2, 0x50, 0x82, 0x5a, 0xa5, 0xc7, 0xb7, 0xaf, 0x97, 0x3f, 0x79, 0x98, 0x43,
+	0xcb, 0x2f, 0x0d, 0x7c, 0xd2, 0xa7, 0x63, 0x84, 0x7b, 0xcb, 0x7b, 0x2f, 0x2e, 0xc7, 0xd8, 0x5f,
+	0x51, 0xad, 0x70, 0xb6, 0x05, 0x4e, 0x11, 0x9a, 0xe8, 0xd7, 0x1b, 0x1a, 0x11, 0x89, 0x59, 0x25,
+	0x13, 0xcd, 0xae, 0x2d, 0x99, 0x68, 0x6e, 0x93, 0x2b, 0x10, 0x89, 0xe7, 0x50, 0x3b, 0x1c, 0x8c,
+	0x4c, 0x7d, 0x38, 0x32, 0xf5, 0xcf, 0x91, 0xa9, 0x3f, 0x8f, 0x4d, 0x6d, 0x38, 0x36, 0xb5, 0xf7,
+	0xb1, 0xa9, 0x5d, 0xe6, 0xa6, 0xf2, 0xfb, 0x99, 0x52, 0xde, 0xf7, 0x09, 0x6b, 0xa6, 0xc4, 0x33,
+	0x3a, 0xf8, 0x0e, 0x00, 0x00, 0xff, 0xff, 0x0b, 0x22, 0x60, 0x81, 0x4a, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -245,6 +330,8 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a EthState by index.
 	EthState(ctx context.Context, in *QueryGetEthStateRequest, opts ...grpc.CallOption) (*QueryGetEthStateResponse, error)
+	// Queries a EthInput by index.
+	EthInput(ctx context.Context, in *QueryGetEthInputRequest, opts ...grpc.CallOption) (*QueryGetEthInputResponse, error)
 }
 
 type queryClient struct {
@@ -273,12 +360,23 @@ func (c *queryClient) EthState(ctx context.Context, in *QueryGetEthStateRequest,
 	return out, nil
 }
 
+func (c *queryClient) EthInput(ctx context.Context, in *QueryGetEthInputRequest, opts ...grpc.CallOption) (*QueryGetEthInputResponse, error) {
+	out := new(QueryGetEthInputResponse)
+	err := c.cc.Invoke(ctx, "/etherlink.etherlink.Query/EthInput", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a EthState by index.
 	EthState(context.Context, *QueryGetEthStateRequest) (*QueryGetEthStateResponse, error)
+	// Queries a EthInput by index.
+	EthInput(context.Context, *QueryGetEthInputRequest) (*QueryGetEthInputResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -290,6 +388,9 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 }
 func (*UnimplementedQueryServer) EthState(ctx context.Context, req *QueryGetEthStateRequest) (*QueryGetEthStateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EthState not implemented")
+}
+func (*UnimplementedQueryServer) EthInput(ctx context.Context, req *QueryGetEthInputRequest) (*QueryGetEthInputResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EthInput not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -332,6 +433,24 @@ func _Query_EthState_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_EthInput_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetEthInputRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).EthInput(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/etherlink.etherlink.Query/EthInput",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).EthInput(ctx, req.(*QueryGetEthInputRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "etherlink.etherlink.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -343,6 +462,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EthState",
 			Handler:    _Query_EthState_Handler,
+		},
+		{
+			MethodName: "EthInput",
+			Handler:    _Query_EthInput_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -461,6 +584,62 @@ func (m *QueryGetEthStateResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetEthInputRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetEthInputRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetEthInputRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetEthInputResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetEthInputResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetEthInputResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.EthInput.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -508,6 +687,26 @@ func (m *QueryGetEthStateResponse) Size() (n int) {
 	var l int
 	_ = l
 	l = m.EthState.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryGetEthInputRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryGetEthInputResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.EthInput.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -760,6 +959,139 @@ func (m *QueryGetEthStateResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.EthState.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetEthInputRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetEthInputRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetEthInputRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetEthInputResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetEthInputResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetEthInputResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EthInput", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.EthInput.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

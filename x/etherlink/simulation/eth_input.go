@@ -12,7 +12,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 )
 
-func SimulateMsgCreateEthState(
+func SimulateMsgCreateEthInput(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -21,13 +21,13 @@ func SimulateMsgCreateEthState(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		msg := &types.MsgCreateEthState{
+		msg := &types.MsgCreateEthInput{
 			Creator: simAccount.Address.String(),
 		}
 
-		_, found := k.GetEthState(ctx)
+		_, found := k.GetEthInput(ctx)
 		if found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "EthState already exist"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "EthInput already exist"), nil, nil
 		}
 
 		txCtx := simulation.OperationInput{
@@ -48,7 +48,7 @@ func SimulateMsgCreateEthState(
 	}
 }
 
-func SimulateMsgUpdateEthState(
+func SimulateMsgUpdateEthInput(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -57,15 +57,15 @@ func SimulateMsgUpdateEthState(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		var (
 			simAccount      = simtypes.Account{}
-			msg             = &types.MsgUpdateEthState{}
-			ethState, found = k.GetEthState(ctx)
+			msg             = &types.MsgUpdateEthInput{}
+			ethInput, found = k.GetEthInput(ctx)
 		)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethState store is empty"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethInput store is empty"), nil, nil
 		}
-		simAccount, found = FindAccount(accs, ethState.Creator)
+		simAccount, found = FindAccount(accs, ethInput.Creator)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethState creator not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethInput creator not found"), nil, nil
 		}
 		msg.Creator = simAccount.Address.String()
 
@@ -87,7 +87,7 @@ func SimulateMsgUpdateEthState(
 	}
 }
 
-func SimulateMsgDeleteEthState(
+func SimulateMsgDeleteEthInput(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -96,15 +96,15 @@ func SimulateMsgDeleteEthState(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		var (
 			simAccount      = simtypes.Account{}
-			msg             = &types.MsgUpdateEthState{}
-			ethState, found = k.GetEthState(ctx)
+			msg             = &types.MsgUpdateEthInput{}
+			ethInput, found = k.GetEthInput(ctx)
 		)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethState store is empty"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethInput store is empty"), nil, nil
 		}
-		simAccount, found = FindAccount(accs, ethState.Creator)
+		simAccount, found = FindAccount(accs, ethInput.Creator)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethState creator not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ethInput creator not found"), nil, nil
 		}
 		msg.Creator = simAccount.Address.String()
 
