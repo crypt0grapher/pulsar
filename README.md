@@ -70,8 +70,9 @@ sequenceDiagram
 
 ## Usage
 Copy `.env.example` to `.env` and set the environment variables.
+The below example is for the node running locally.
 ```shell
-ETH_RPC_URL=http://127.0.0.1:8545
+ETH_RPC_URL=http://host.docker.internal:8545
 ```
 NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against, so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own node.
 ```shell
