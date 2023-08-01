@@ -10,6 +10,8 @@ services:
       - .env
     ports:
       - "7545:7545"
+    networks:
+      - etherlink_network
   etherlink:
     build:
       context: .
@@ -22,3 +24,8 @@ services:
       - "26657:26657"
       - "1317:1317"
       - "4500:4500"
+    networks:
+      - etherlink_network
+networks:
+  etherlink_network:
+    driver: bridge
