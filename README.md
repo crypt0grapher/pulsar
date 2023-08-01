@@ -61,16 +61,18 @@ NB! Nodes should support `eth_getProof`, which excludes Erigon and Reth at least
 ignite chain serve
 ```
 
+Detailed log and error messages happening during Merkle proof verification and Ethereum connectivity issues can be found in the log.
+For troubleshooting use
+```shell
+ignite chain build
+etherlinkd start
+```
+
 ## Configuration
 
 As a part of the genesis, by default the App queries slot 0x00 from the Uniswap V3 WETH/USDC pair, which
 is `0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640`.
-From should be the user that's running the node - Alice or Bob , for that the app should be run locally to see the keys,
-so just run it with
-
-```shell
-ignite chain serve
-```
+From should be the user that's running the node - Alice or Bob - use the keys displayed on node startup with `ignite chain serve`.
 
 Then change the params by sending the tx:
 
