@@ -3,9 +3,8 @@ package etherlink
 import (
 	"context"
 	"encoding/json"
+	"etherlink/x/etherlink/merkle_proof_verifier"
 	"fmt"
-	"strconv"
-
 	// this line is used by starport scaffolding # 1
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -15,7 +14,6 @@ import (
 
 	"etherlink/x/etherlink/client/cli"
 	"etherlink/x/etherlink/keeper"
-	"etherlink/x/etherlink/merkle_proof_verifier"
 	"etherlink/x/etherlink/rpc_ethereum"
 	"etherlink/x/etherlink/types"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -149,26 +147,43 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+	logger := am.keeper.Logger(ctx)
 	ethInput, found := am.keeper.GetEthInput(ctx)
-	am.keeper.Logger(ctx).Info("BeginBlock", "ethInput", ethInput, "found", found)
+	logger.Info("BeginBlock", "ethInput", ethInput, "found", found)
 	if found {
 		proof, e := am.ethereumClient.Eth_getProof(ethInput.EthAddress, ethInput.EthSlot)
-		am.keeper.Logger(ctx).Info("BeginBlock", "Value", proof, "Error", e)
-		blockNumber, e := am.ethereumClient.Eth_blockNumber()
-		am.keeper.Logger(ctx).Info("BeginBlock", "blockNumber", blockNumber, "Error", e)
-		blockHeader, e := am.ethereumClient.Eth_getBlockByNumber(blockNumber, false)
-		am.keeper.Logger(ctx).Info("BeginBlock", "blockHeader", blockHeader, "Error", e)
-		authentic, e := merkle_proof_verifier.VerifyProof(blockHeader.StateRoot, proof.StorageProof[0].Proof, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
+		if e != nil {
+			logger.Error("BeginBlock", "Error in getProof", e)
+		}
+		logger.Info("BeginBlock", "StorageProof", proof.StorageProof, "StorageHash", proof.StorageHash)
+		//blockNumber, e := am.ethereumClient.Eth_blockNumber()
+		//if e != nil {
+		//	logger.Error("BeginBlock", "Error in blockNumber", e)
+		//}
+		//logger.Info("BeginBlock", "blockNumber", blockNumber)
+		//blockHeader, e := am.ethereumClient.Eth_getBlockByNumber(blockNumber, false)
+		//if e != nil {
+		//	logger.Error("BeginBlock", "Error in getBlockByNumber", e)
+		//}
+		logger.Info("BeginBlock", "proof.StorageProof[0].Proof", proof.StorageProof[0].Proof)
+		logger.Info("BeginBlock", "proof.StorageProof[0].Key", proof.StorageProof[0].Key)
+		logger.Info("BeginBlock", "proof.StorageProof[0].Value", proof.StorageProof[0].Value)
+		authentic, e := merkle_proof_verifier.VerifyProof(logger, proof.StorageProof[0].Proof, proof.StorageHash, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
+		if e != nil {
+			logger.Error("BeginBlock", "Error in VerifyProof", e)
+		}
 		am.keeper.Logger(ctx).Info("BeginBlock", "authentic", authentic, "Error", e)
-		if e == nil {
+		if authentic {
 			am.keeper.SetEthState(ctx, types.EthState{
 				EthAddress:     proof.Address,
 				EthSlot:        proof.StorageProof[0].Key,
-				EthMerkleRoot:  blockHeader.StateRoot,
+				EthMerkleRoot:  proof.StorageHash,
 				EthMerkleProof: proof.StorageProof[0].Proof,
-				EthBlockHeight: strconv.Itoa(blockNumber),
+				EthBlockHeight: "", // TODO: get block height from ethereum = implemented, just uncomment the above code
 				EthState:       proof.StorageProof[0].Value,
 			})
+		} else {
+			logger.Error("BeginBlock", "Error in VerifyProof! Ethereum RPC Node is giving false data!", e)
 		}
 	}
 }

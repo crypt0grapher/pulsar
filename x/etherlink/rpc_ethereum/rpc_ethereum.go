@@ -66,28 +66,28 @@ type TransactionResponse struct {
 }
 
 type BlockResult struct {
-	Author           string              `json:"author"` // Parity only
-	Difficulty       string              `json:"difficulty"`
-	ExtraData        string              `json:"extraData"`
-	GasLimit         string              `json:"gasLimit"`
-	GasUsed          string              `json:"gasUsed"`
-	Hash             string              `json:"hash"`
-	LogsBloom        string              `json:"logsBloom"`
-	Miner            string              `json:"miner"`
-	MixHash          string              `json:"mixHash"`
-	Nonce            string              `json:"nonce"`
-	Number           string              `json:"number"`
-	ParentHash       string              `json:"parentHash"`
-	ReceiptsRoot     string              `json:"receiptsRoot"`
-	SealFields       []string            `json:"sealFields"` // Parity only
-	SHA3Uncles       string              `json:"sha3Uncles"`
-	Size             string              `json:"size"`
-	StateRoot        string              `json:"stateRoot"`
-	Timestamp        string              `json:"timestamp"`
-	TotalDifficulty  string              `json:"totalDifficulty"`
-	Transactions     []TransactionResult `json:"transactions"`
-	TransactionsRoot string              `json:"transactionsRoot"`
-	Uncles           []string            `json:"uncles"`
+	Author           string   `json:"author"` // Parity only
+	Difficulty       string   `json:"difficulty"`
+	ExtraData        string   `json:"extraData"`
+	GasLimit         string   `json:"gasLimit"`
+	GasUsed          string   `json:"gasUsed"`
+	Hash             string   `json:"hash"`
+	LogsBloom        string   `json:"logsBloom"`
+	Miner            string   `json:"miner"`
+	MixHash          string   `json:"mixHash"`
+	Nonce            string   `json:"nonce"`
+	Number           string   `json:"number"`
+	ParentHash       string   `json:"parentHash"`
+	ReceiptsRoot     string   `json:"receiptsRoot"`
+	SealFields       []string `json:"sealFields"` // Parity only
+	SHA3Uncles       string   `json:"sha3Uncles"`
+	Size             string   `json:"size"`
+	StateRoot        string   `json:"stateRoot"`
+	Timestamp        string   `json:"timestamp"`
+	TotalDifficulty  string   `json:"totalDifficulty"`
+	Transactions     []string `json:"transactions"`
+	TransactionsRoot string   `json:"transactionsRoot"`
+	Uncles           []string `json:"uncles"`
 }
 
 // ToBlock converts a BlockResult to a Block
@@ -130,37 +130,36 @@ func (blockResult *BlockResult) ToBlock() (*Block, error) {
 	totalDifficulty.SetString(blockResult.TotalDifficulty, 0)
 
 	block := Block{
-		Author:          blockResult.Author,
-		Difficulty:      difficulty,
-		ExtraData:       blockResult.ExtraData,
-		GasLimit:        int(gasLimit),
-		GasUsed:         int(gasUsed),
-		Hash:            blockResult.Hash,
-		LogsBloom:       blockResult.LogsBloom,
-		Miner:           blockResult.Miner,
-		MixHash:         blockResult.MixHash,
-		Nonce:           nonce,
-		Number:          int(number),
-		ParentHash:      blockResult.ParentHash,
-		ReceiptsRoot:    blockResult.ReceiptsRoot,
-		SealFields:      blockResult.SealFields,
-		SHA3Uncles:      blockResult.SHA3Uncles,
-		Size:            int(size),
-		StateRoot:       blockResult.StateRoot,
-		Timestamp:       int(timestamp),
-		TotalDifficulty: totalDifficulty,
-		// Transactions
+		Author:           blockResult.Author,
+		Difficulty:       difficulty,
+		ExtraData:        blockResult.ExtraData,
+		GasLimit:         int(gasLimit),
+		GasUsed:          int(gasUsed),
+		Hash:             blockResult.Hash,
+		LogsBloom:        blockResult.LogsBloom,
+		Miner:            blockResult.Miner,
+		MixHash:          blockResult.MixHash,
+		Nonce:            nonce,
+		Number:           int(number),
+		ParentHash:       blockResult.ParentHash,
+		ReceiptsRoot:     blockResult.ReceiptsRoot,
+		SealFields:       blockResult.SealFields,
+		SHA3Uncles:       blockResult.SHA3Uncles,
+		Size:             int(size),
+		StateRoot:        blockResult.StateRoot,
+		Timestamp:        int(timestamp),
+		TotalDifficulty:  totalDifficulty,
 		TransactionsRoot: blockResult.TransactionsRoot,
 		Uncles:           blockResult.Uncles,
 	}
 
 	// populate the transactions in the block
 	for _, resultTx := range blockResult.Transactions {
-		tx, err := resultTx.ToTransaction()
-		if err != nil {
-			return nil, err
-		}
-		block.Transactions = append(block.Transactions, *tx)
+		//tx, err := resultTx.ToTransaction()
+		//if err != nil {
+		//	return nil, err
+		//}
+		block.Transactions = append(block.Transactions, resultTx)
 	}
 
 	return &block, nil
@@ -269,28 +268,28 @@ func (txResult *TransactionResult) ToTransaction() (*Transaction, error) {
 }
 
 type Block struct {
-	Author           string        `json:"author"`
-	Difficulty       int64         `json:"difficulty"`
-	ExtraData        string        `json:"extra_data"`
-	GasLimit         int           `json:"gas_limit"`
-	GasUsed          int           `json:"gas_used"`
-	Hash             string        `json:"hash"`
-	LogsBloom        string        `json:"logs_bloom"`
-	Miner            string        `json:"miner"`
-	MixHash          string        `json:"mix_hash"`
-	Nonce            *big.Int      `json:"nonce"`
-	Number           int           `json:"number"`
-	ParentHash       string        `json:"parent_hash"`
-	ReceiptsRoot     string        `json:"receipts_root"`
-	SealFields       []string      `json:"seal_fields"`
-	SHA3Uncles       string        `json:"sha3_uncles"`
-	Size             int           `json:"size"`
-	StateRoot        string        `json:"state_root"`
-	Timestamp        int           `json:"timestamp"`
-	TotalDifficulty  *big.Int      `json:"total_difficulty"`
-	Transactions     []Transaction `json:"transactions"`
-	TransactionsRoot string        `json:"transactions_root"`
-	Uncles           []string      `json:"uncles"`
+	Author           string   `json:"author"`
+	Difficulty       int64    `json:"difficulty"`
+	ExtraData        string   `json:"extra_data"`
+	GasLimit         int      `json:"gas_limit"`
+	GasUsed          int      `json:"gas_used"`
+	Hash             string   `json:"hash"`
+	LogsBloom        string   `json:"logs_bloom"`
+	Miner            string   `json:"miner"`
+	MixHash          string   `json:"mix_hash"`
+	Nonce            *big.Int `json:"nonce"`
+	Number           int      `json:"number"`
+	ParentHash       string   `json:"parent_hash"`
+	ReceiptsRoot     string   `json:"receipts_root"`
+	SealFields       []string `json:"seal_fields"`
+	SHA3Uncles       string   `json:"sha3_uncles"`
+	Size             int      `json:"size"`
+	StateRoot        string   `json:"state_root"`
+	Timestamp        int      `json:"timestamp"`
+	TotalDifficulty  *big.Int `json:"total_difficulty"`
+	Transactions     []string `json:"transactions"`
+	TransactionsRoot string   `json:"transactions_root"`
+	Uncles           []string `json:"uncles"`
 }
 
 // ToJSON marshals a Block into JSON

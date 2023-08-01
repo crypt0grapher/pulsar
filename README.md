@@ -72,6 +72,7 @@ sequenceDiagram
 
 Copy `.env.example` to `.env` and set the environment variables.
 The below example is for the geth node running locally.
+NB! Erigon and Reth consequently don't support `eth_getProof`, use Geth.
 
 ```shell
 ETH_RPC_URL=http://host.docker.internal:8545
@@ -125,6 +126,7 @@ Get the current value of the slot with `eth_state`
 - **Ethereum query** The `eth_getProof` method is preferred over `eth_getStorageAt` because it not only returns the same
   value but also provides a Merkle proof. This proof is used to validate the authenticity of the returned value against
   the light client.
+- **Merkle Patricia Trie verification** was written to verify the Merkle proof against the State root. 
 
 ## Future Improvements
 
