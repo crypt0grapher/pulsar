@@ -24,6 +24,8 @@ func TestMsgCreateEthInput_ValidateBasic(t *testing.T) {
 			name: "valid address",
 			msg: MsgCreateEthInput{
 				Creator: sample.AccAddress(),
+				Address: "test-address",
+				Slot:    "test-slot",
 			},
 		},
 	}

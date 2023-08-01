@@ -14,12 +14,17 @@ service Msg {
 }
 message MsgCreateEthInput {
   string creator = 1;
+  string eth_address = 2;
+  string eth_slot = 3;
 }
 
 message MsgCreateEthInputResponse {}
 
 message MsgUpdateEthInput {
   string creator = 1;
+  string eth_address = 2;
+  string eth_slot = 3;
+
 }
 
 message MsgUpdateEthInputResponse {}

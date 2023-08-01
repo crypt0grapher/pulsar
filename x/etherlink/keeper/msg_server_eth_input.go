@@ -18,7 +18,9 @@ func (k msgServer) CreateEthInput(goCtx context.Context, msg *types.MsgCreateEth
 	}
 
 	var ethInput = types.EthInput{
-		Creator: msg.Creator,
+		Creator:    msg.Creator,
+		EthAddress: msg.EthAddress,
+		EthSlot:    msg.EthSlot,
 	}
 
 	k.SetEthInput(

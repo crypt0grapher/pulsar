@@ -13,9 +13,11 @@ const (
 
 var _ sdk.Msg = &MsgCreateEthInput{}
 
-func NewMsgCreateEthInput(creator string) *MsgCreateEthInput {
+func NewMsgCreateEthInput(creator string, ethAddress string, ethSlot string) *MsgCreateEthInput {
 	return &MsgCreateEthInput{
-		Creator: creator,
+		Creator:    creator,
+		EthAddress: ethAddress,
+		EthSlot:    ethSlot,
 	}
 }
 

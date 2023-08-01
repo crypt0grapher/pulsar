@@ -2,6 +2,7 @@ package cli
 
 import (
 	"etherlink/x/etherlink/types"
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -12,15 +13,20 @@ func CmdCreateEthInput() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-eth-input",
 		Short: "Create ethInput",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
+			if args[0] == "" {
+				return fmt.Errorf("Specify Ethereum address to watch")
+			}
+			if args[1] == "" {
+				return fmt.Errorf("Specify Ethereum slot to watch")
+			}
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCreateEthInput(clientCtx.GetFromAddress().String())
+			msg := types.NewMsgCreateEthInput(clientCtx.GetFromAddress().String(), args[0], args[1])
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
