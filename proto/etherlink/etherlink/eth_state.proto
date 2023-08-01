@@ -8,6 +8,5 @@ message EthState {
   string eth_slot = 2;
   string eth_merkle_root = 3;
   repeated string eth_merkle_proof = 4;
-  string eth_block_height = 5;
-  string eth_state = 6;
+  string eth_state = 5;
 }

@@ -34985,8 +34985,6 @@ paths:
                     type: array
                     items:
                       type: string
-                  eth_block_height:
-                    type: string
                   eth_state:
                     type: string
         default:
@@ -70675,8 +70673,6 @@ definitions:
         type: array
         items:
           type: string
-      eth_block_height:
-        type: string
       eth_state:
         type: string
   etherlink.etherlink.MsgCreateEthInputResponse:
@@ -70716,8 +70712,6 @@ definitions:
             type: array
             items:
               type: string
-          eth_block_height:
-            type: string
           eth_state:
             type: string
   etherlink.etherlink.QueryParamsResponse:

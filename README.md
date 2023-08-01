@@ -50,23 +50,12 @@ end
 G[ Users ] <-->| Query State | E
 ```
 
-```mermaid
-sequenceDiagram
-    participant E as Ethereum Network
-    participant R as Ethereum Relayer
-    participant L as Ethereum Light Client
-    participant S as Ethereum State Storage
-    participant Q as Query Server
-    participant U as Users
-
-    E ->> R: Emit Block Headers & Merkle Roots
-    R ->> C: Transmit IBC Packets
-    I ->> L: Submit State Update Proposal
-    L ->> M: Validate and Forward State Data
-    M ->> C: Store Verified State
-    U ->> C: Query Stored State
-
+## Quick Start
+```shell
+cp .env.example .env
+docker-compose up
 ```
+Starts the Cosmos SDK chain and the Ethereum Light Client in two containers.
 
 ## Usage
 
@@ -81,12 +70,8 @@ ETH_RPC_URL=http://host.docker.internal:8545
 NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against,
 so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own `geth` node.
 
-```shell
-docker-compose up
-```
-
 Example query (slot 0 of Uniswap V3 WETH/USDC pair)
-
+## Testing 
 ```shell
 curl -X POST --data '{
     "jsonrpc":"2.0",
@@ -94,6 +79,10 @@ curl -X POST --data '{
     "params": ["0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x0", "latest"],
     "id":1
 }' -H "Content-Type: application/json" http://localhost:8545
+```
+
+```shell
+curl -X GET "http://0.0.0.0:1317/etherlink/etherlink/eth_state" -H  "accept: application/json";
 ```
 
 User queries are available via the `query` command:

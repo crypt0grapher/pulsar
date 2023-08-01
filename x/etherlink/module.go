@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"etherlink/x/etherlink/merkle_proof_verifier"
 	"fmt"
+	"os"
+
 	// this line is used by starport scaffolding # 1
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -105,7 +107,10 @@ func NewAppModule(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 ) AppModule {
-	provider := "http://localhost:8545"
+	provider := os.Getenv("LIGHTNODE_RPC_URL")
+	if provider == "" {
+		provider = "http://localhost:8545"
+	}
 	ethereumClient := rpc_ethereum.EthereumClient{provider}
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
@@ -148,42 +153,46 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	logger := am.keeper.Logger(ctx)
+	// Create a done channel to signal when the goroutine has finished, - we don't know how long qurying Ethereum  will take
+	done := make(chan bool)
+	// Getting config - what contract and slot to query
 	ethInput, found := am.keeper.GetEthInput(ctx)
 	logger.Info("BeginBlock", "ethInput", ethInput, "found", found)
 	if found {
-		proof, e := am.ethereumClient.Eth_getProof(ethInput.EthAddress, ethInput.EthSlot)
-		if e != nil {
-			logger.Error("BeginBlock", "Error in getProof", e)
-		}
-		logger.Info("BeginBlock", "StorageProof", proof.StorageProof, "StorageHash", proof.StorageHash)
-		//blockNumber, e := am.ethereumClient.Eth_blockNumber()
-		//if e != nil {
-		//	logger.Error("BeginBlock", "Error in blockNumber", e)
-		//}
-		//logger.Info("BeginBlock", "blockNumber", blockNumber)
-		//blockHeader, e := am.ethereumClient.Eth_getBlockByNumber(blockNumber, false)
-		//if e != nil {
-		//	logger.Error("BeginBlock", "Error in getBlockByNumber", e)
-		//}
-		logger.Info("BeginBlock", "proof.StorageProof[0].Proof", proof.StorageProof[0].Proof)
-		logger.Info("BeginBlock", "proof.StorageProof[0].Key", proof.StorageProof[0].Key)
-		logger.Info("BeginBlock", "proof.StorageProof[0].Value", proof.StorageProof[0].Value)
-		authentic, e := merkle_proof_verifier.VerifyProof(logger, proof.StorageProof[0].Proof, proof.StorageHash, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
-		if e != nil {
-			logger.Error("BeginBlock", "Error in VerifyProof", e)
-		}
-		am.keeper.Logger(ctx).Info("BeginBlock", "authentic", authentic, "Error", e)
-		if authentic {
-			am.keeper.SetEthState(ctx, types.EthState{
-				EthAddress:     proof.Address,
-				EthSlot:        proof.StorageProof[0].Key,
-				EthMerkleRoot:  proof.StorageHash,
-				EthMerkleProof: proof.StorageProof[0].Proof,
-				EthBlockHeight: "", // TODO: get block height from ethereum = implemented, just uncomment the above code
-				EthState:       proof.StorageProof[0].Value,
-			})
-		} else {
-			logger.Error("BeginBlock", "Error in VerifyProof! Ethereum RPC Node is giving false data!", e)
+		go func() {
+			proof, e := am.ethereumClient.Eth_getProof(ethInput.EthAddress, ethInput.EthSlot)
+			logger.Info("BeginBlock", "proof.StorageProof[0].Proof", proof.StorageProof[0].Proof)
+			logger.Info("BeginBlock", "proof.StorageProof[0].Key", proof.StorageProof[0].Key)
+			logger.Info("BeginBlock", "proof.StorageProof[0].Value", proof.StorageProof[0].Value)
+			// Verifying the Merkle proof
+			authentic, e := merkle_proof_verifier.VerifyProof(logger, proof.StorageProof[0].Proof, proof.StorageHash, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
+			if e != nil {
+				logger.Error("BeginBlock", "Error in VerifyProof", e)
+			}
+			am.keeper.Logger(ctx).Info("BeginBlock", "authentic", authentic, "Error", e)
+			if authentic {
+				// Saving to the chain
+				am.keeper.SetEthState(ctx, types.EthState{
+					EthAddress:     proof.Address,
+					EthSlot:        proof.StorageProof[0].Key,
+					EthMerkleRoot:  proof.StorageHash,
+					EthMerkleProof: proof.StorageProof[0].Proof,
+					EthState:       proof.StorageProof[0].Value,
+				})
+			} else {
+				logger.Error("BeginBlock", "Error in VerifyProof! Ethereum RPC Node is giving false data!", e)
+			}
+			// Signal that the goroutine has finished
+			done <- true
+		}()
+
+		// If a goroutine is still running, don't trigger another one
+		select {
+		case <-done:
+			// If the goroutine has finished, we'll add some more things here
+		default:
+			// If the goroutine is still running, do nothing
+			return
 		}
 	}
 }

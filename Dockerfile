@@ -1,4 +1,5 @@
 FROM golang:latest
+ARG LIGHTNODE_RPC_URL
 RUN mkdir /app
 COPY . /app
 WORKDIR /app

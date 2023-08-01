@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/trie"
 )
 
-// VerifyProof verifies a merkle proof for Ethereum storage
+// Verifies a merkle proof for Ethereum storage that we're getting in module.go
 func VerifyProof(logger log.Logger, proofStrs []string, rootStr string, keyStr string, valueStr string) (bool, error) {
 	// Convert hex strings to common.Hash
 	// that's StorageHash
@@ -19,7 +19,7 @@ func VerifyProof(logger log.Logger, proofStrs []string, rootStr string, keyStr s
 		return false, fmt.Errorf("failed to convert root to hash: %w", err)
 	}
 
-	// the key
+	// the key, eth_getProof returns odd length in case of zero
 	if keyStr == "0x0" {
 		keyStr = "0x0000000000000000000000000000000000000000000000000000000000000000"
 	}
@@ -66,14 +66,13 @@ func VerifyProof(logger log.Logger, proofStrs []string, rootStr string, keyStr s
 	if err != nil {
 		return false, fmt.Errorf("failed to verify proof: %w", err)
 	}
-	//value ==
 	logger.Info("VerifyProof", "value", common.BytesToHash(value), "val", common.BytesToHash(val))
 	return common.BytesToHash(val) == common.BytesToHash(val), nil
 }
 
 // toHash converts a hex string to a common.Hash
 func toHash(hexStr string) (common.Hash, error) {
-	bytes, err := hex.DecodeString(hexStr[2:]) // Remove "0x" prefix
+	bytes, err := hex.DecodeString(hexStr[2:])
 	if err != nil {
 		return common.Hash{}, err
 	}
