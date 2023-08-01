@@ -6,7 +6,7 @@ NB: A **"state"** here is a value stored in a specific storage slot of a specifi
 
 ## Proposed Architecture
 
-The solution consists of following components:
+The prototype solution consists of following components:
 
 1. **Ethereum Light Client.**
     - _Objective:_ proving the value of a specific storage slot at a given block in a trustless manner.
@@ -16,9 +16,10 @@ The solution consists of following components:
         - Verifying Merkle proofs.
         - Sending verified data to **Ethereum State Storage** for storage.
     - _Prototype simplification:_ an extremely robust external Ethereum Light
-      Client ([helios](https://github.com/a16z/helios)) is used currently running as a separate process on the same
-      machine. It is queried by the application via JSON-RPC block's Merkle root (`transactionsRoot`)
-      with `eth_getBlockByNumber`.
+      This is not used currently for simplicity, a full node is quiried for the same info, although a light client is a
+      part of this repo and it is possible to run ([helios](https://github.com/a16z/helios)) as a separate process on
+      the same
+      machine in a docker container.
 2. **Ethereum Relay.**
     - _Objective:_ submitting Ethereum state update proposals to the Cosmos SDK Chain.
     - _Responsibilities._
@@ -57,11 +58,8 @@ If you are running **Geth** locally, you can keep the default value.
 NB! Nodes should support `eth_getProof`, which excludes Erigon and Reth at least, Infura doesn't support it either.
 
 ```shell
-cp .env.example .env
-docker-compose up
+ignite chain serve
 ```
-
-Starts the Cosmos SDK chain and the Ethereum Light Client in two containers.
 
 ## Configuration
 
@@ -116,8 +114,9 @@ curl -X POST --data '{
 
 ## Key Design Decisions
 
-- **The Light Client** is the choice to perform trustless validation of the fetched Ethereum state without storing the
-  entire Ethereum blockchain. Alternatives could be using a trusted oracle to provide the Ethereum state, but that
+- **Merkle Patricia Trie verification** is the choice to perform trustless validation of the fetched Ethereum state
+  without storing the entire Ethereum blockchain. Alternatives could be using a trusted oracle to provide the Ethereum
+  state, but that
   reduces the trustlessness of the system and significantly reduces security opening the system to central point of
   failure.
 - **Tendermint Consensus** is built-in secure BFT consensus algorithm used here to provide agreement on the Ethereum
@@ -127,7 +126,6 @@ curl -X POST --data '{
 - **Ethereum query** The `eth_getProof` method is preferred over `eth_getStorageAt` because it not only returns the same
   value but also provides a Merkle proof. This proof is used to validate the authenticity of the returned value against
   the light client.
-- **Merkle Patricia Trie verification** is used to verify the Merkle proof against the State root.
 - A simple Ethereum **JSON RPC** client was written so support queries to the Ethereum node.
 
 ## Future Improvements
@@ -139,7 +137,8 @@ curl -X POST --data '{
 - Error Handling done right. Fallback nodes, retries, and timeouts.
 - Ethereum Light Client as a Cosmos SDK Module. Separate reusable solution going forward that is in great demand among
   Cosmos SDK developers. Reusing Geth code (GPL) would be a great option since it supports the light mode natively.
-- Ethereum State Storage as a Cosmos SDK Module.
+- Ethereum State Storage as a Cosmos SDK Module. There's already a very robust [helios](https://github.com/a16z/helios)
+  client is part of a docker container in this repository, although it is removed for simplicity.
 - IBC Relayer is a great option for a cross-chain communication method for the purpose of submitting state update
   proposals to the Cosmos SDK Chain instead of Ethereum Relay Module.
 - Currently Ethereum Node is queried directly at the beginning of every block, the better design would be listening to
@@ -150,3 +149,8 @@ curl -X POST --data '{
 - Failover and redundancy: implement automated recovery from failures.
 - Test the system with a large number of nodes, a terraform or similar script to be developed to deploy the system, as
   well as a load testing tool.
+
+## Not Used
+
+Op top of described there are two docker containers here - with the chain and the light client, both work together just
+fine as a part of experiment. 

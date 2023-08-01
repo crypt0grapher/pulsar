@@ -24,6 +24,8 @@ services:
       - "26657:26657"
       - "1317:1317"
       - "4500:4500"
+    depends_on:
+      - lightnode
     networks:
       - etherlink_network
 networks:

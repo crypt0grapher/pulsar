@@ -113,7 +113,7 @@ func NewAppModule(
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error loading .env file")
 	}
-	provider := os.Getenv("LIGHTNODE_RPC_URL")
+	provider := os.Getenv("ETH_RPC_URL")
 	ethereumClient := rpc_ethereum.EthereumClient{provider}
 	_, err = ethereumClient.Eth_blockNumber()
 	if err != nil {
@@ -169,9 +169,6 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	if found {
 		go func() {
 			proof, e := am.ethereumClient.Eth_getProof(ethInput.EthAddress, ethInput.EthSlot)
-			logger.Info("BeginBlock", "proof.StorageProof[0].Proof", proof.StorageProof[0].Proof)
-			logger.Info("BeginBlock", "proof.StorageProof[0].Key", proof.StorageProof[0].Key)
-			logger.Info("BeginBlock", "proof.StorageProof[0].Value", proof.StorageProof[0].Value)
 			// Verifying the Merkle proof
 			authentic, e := merkle_proof_verifier.VerifyProof(logger, proof.StorageProof[0].Proof, proof.StorageHash, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
 			if e != nil {
