@@ -51,27 +51,60 @@ G[ Users ] <-->| Query State | E
 ```
 
 ## Quick Start
+
+Point the `ETH_RPC_URL` in `.env` file to your Ethereum node.
+If you are running **Geth** locally, you can keep the default value.
+NB! Nodes should support `eth_getProof`, which excludes Erigon and Reth at least, Infura doesn't support it either.
+
 ```shell
 cp .env.example .env
 docker-compose up
 ```
+
 Starts the Cosmos SDK chain and the Ethereum Light Client in two containers.
 
-## Usage
+## Configuration
 
-Copy `.env.example` to `.env` and set the environment variables.
-The below example is for the geth node running locally.
-NB! Erigon and Reth consequently don't support `eth_getProof`, use Geth.
+As a part of the genesis, by default the App queries slot 0x00 from the Uniswap V3 WETH/USDC pair, which
+is `0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640`.
+From should be the user that's running the node - Alice or Bob , for that the app should be run locally to see the keys,
+so just run it with
 
 ```shell
-ETH_RPC_URL=http://host.docker.internal:8545
+ignite chain serve
 ```
 
-NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against,
-so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own `geth` node.
+Then change the params by sending the tx:
 
-Example query (slot 0 of Uniswap V3 WETH/USDC pair)
-## Testing 
+```shell
+ etherlinkd tx etherlink create-eth-input --from cosmos1nqyfmkfnr207zq35uvu88kgshkgvn79pe2x84m 0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640 0x0000000000000000000000000000000000001
+```
+
+Check if they are set correctly:
+
+```shell
+curl -X GET "http://0.0.0.0:1317/etherlink/etherlink/eth_input" -H  "accept: application/json";
+```
+
+## Test
+
+Get the current value of the slot with `eth_state` query:
+
+```shell
+curl -X GET "http://0.0.0.0:1317/etherlink/etherlink/eth_state" -H  "accept: application/json";
+```
+
+or
+
+```shell
+etherlinkd query etherlink show-eth-state
+```
+
+`eth_state` goes last, the chain saves some additional info to verify it as well - `eth_merkle_root`
+and `eth_merkle_proof`.
+
+Check if the value is the same with your favirite Ethereum client:
+
 ```shell
 curl -X POST --data '{
     "jsonrpc":"2.0",
@@ -79,27 +112,6 @@ curl -X POST --data '{
     "params": ["0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x0", "latest"],
     "id":1
 }' -H "Content-Type: application/json" http://localhost:8545
-```
-
-```shell
-curl -X GET "http://0.0.0.0:1317/etherlink/etherlink/eth_state" -H  "accept: application/json";
-```
-
-User queries are available via the `query` command:
-
-As a part of the genesis the App is quering slot 0x0 of the Uniswap V3 WETH/USDC pair, which can be changed with
-sending `eth_input` message:
-e.g.
-
-```shell
- etherlinkd tx etherlink create-eth-input --from cosmos1nqyfmkfnr207zq35uvu88kgshkgvn79pe2x84m 0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640 0x0000000000000000000000000000000000001
-```
-
-```shell
-
-Set address and slot to watch in Ethereum with `eth_input`
-Get the current value of the slot with `eth_state`
-```shell
 ```
 
 ## Key Design Decisions
@@ -115,13 +127,16 @@ Get the current value of the slot with `eth_state`
 - **Ethereum query** The `eth_getProof` method is preferred over `eth_getStorageAt` because it not only returns the same
   value but also provides a Merkle proof. This proof is used to validate the authenticity of the returned value against
   the light client.
-- **Merkle Patricia Trie verification** was written to verify the Merkle proof against the State root. 
+- **Merkle Patricia Trie verification** is used to verify the Merkle proof against the State root.
+- A simple Ethereum **JSON RPC** client was written so support queries to the Ethereum node.
 
 ## Future Improvements
 
-- The current system is extremely simplified, and implemented as a single Cosmos App. The modular design is anticipated
+- The current system is **extremely** simplified, and implemented as a single Cosmos App. The modular design is
+  anticipated
   in the initial component breakdown, and each component is expected to be implemented as a separate Cosmos SDK Module.
   Moving the logic into modules will allow for easier maintenance and upgrades.
+- Error Handling done right. Fallback nodes, retries, and timeouts.
 - Ethereum Light Client as a Cosmos SDK Module. Separate reusable solution going forward that is in great demand among
   Cosmos SDK developers. Reusing Geth code (GPL) would be a great option since it supports the light mode natively.
 - Ethereum State Storage as a Cosmos SDK Module.

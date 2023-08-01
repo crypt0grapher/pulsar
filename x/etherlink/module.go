@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"etherlink/x/etherlink/merkle_proof_verifier"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"os"
 
 	// this line is used by starport scaffolding # 1
@@ -23,6 +24,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -107,11 +109,17 @@ func NewAppModule(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 ) AppModule {
-	provider := os.Getenv("LIGHTNODE_RPC_URL")
-	if provider == "" {
-		provider = "http://localhost:8545"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Error loading .env file")
 	}
+	provider := os.Getenv("LIGHTNODE_RPC_URL")
 	ethereumClient := rpc_ethereum.EthereumClient{provider}
+	_, err = ethereumClient.Eth_blockNumber()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Error connecting to ethereum client, check LIGHTNODE_RPC_URL in .env file")
+		panic(err)
+	}
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
