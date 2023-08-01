@@ -7,7 +7,7 @@ message EthState {
   string eth_address = 1;
   string eth_slot = 2;
   string eth_merkle_root = 3;
-  string eth_merkle_proof = 4;
+  repeated string eth_merkle_proof = 4;
   string eth_block_height = 5;
   string eth_state = 6;
 }

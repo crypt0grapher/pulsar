@@ -1,6 +1,6 @@
 version: '3'
 services:
-  etherlink:
+  lightnode:
     build:
       context: .
       dockerfile: Light.Dockerfile
@@ -10,3 +10,14 @@ services:
       - .env
     ports:
       - "7545:7545"
+  etherlink:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - LIGHTNODE_RPC_URL=${LIGHTNODE_RPC_URL}
+    ports:
+      - "26657:26657"
+      - "1317:1317"
+      - "4500:4500"
+    command: ./wait-for-it.sh lightnode:7545 -t 60 -- echo "Ethereum Light Node is up"

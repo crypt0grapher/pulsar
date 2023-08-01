@@ -69,17 +69,44 @@ sequenceDiagram
 ```
 
 ## Usage
+
 Copy `.env.example` to `.env` and set the environment variables.
-The below example is for the node running locally.
+The below example is for the geth node running locally.
+
 ```shell
 ETH_RPC_URL=http://host.docker.internal:8545
 ```
-NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against, so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own node.
+
+NB! Infura doesn't support `eth_getProof` method which is used to get block's root to verify the storage slot against,
+so the `ETH_RPC_URL` should be set to Alchemy, Quicknode, or your own `geth` node.
+
 ```shell
 docker-compose up
 ```
 
+Example query (slot 0 of Uniswap V3 WETH/USDC pair)
+
+```shell
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "method":"eth_getStorageAt",
+    "params": ["0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640", "0x0", "latest"],
+    "id":1
+}' -H "Content-Type: application/json" http://localhost:8545
+```
+
 User queries are available via the `query` command:
+
+As a part of the genesis the App is quering slot 0x0 of the Uniswap V3 WETH/USDC pair, which can be changed with
+sending `eth_input` message:
+e.g.
+
+```shell
+ etherlinkd tx etherlink create-eth-input --from cosmos1nqyfmkfnr207zq35uvu88kgshkgvn79pe2x84m 0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640 0x0000000000000000000000000000000000001
+```
+
+```shell
+
 Set address and slot to watch in Ethereum with `eth_input`
 Get the current value of the slot with `eth_state`
 ```shell
@@ -105,10 +132,12 @@ Get the current value of the slot with `eth_state`
   in the initial component breakdown, and each component is expected to be implemented as a separate Cosmos SDK Module.
   Moving the logic into modules will allow for easier maintenance and upgrades.
 - Ethereum Light Client as a Cosmos SDK Module. Separate reusable solution going forward that is in great demand among
-  Cosmos SDK developers.
+  Cosmos SDK developers. Reusing Geth code (GPL) would be a great option since it supports the light mode natively.
 - Ethereum State Storage as a Cosmos SDK Module.
 - IBC Relayer is a great option for a cross-chain communication method for the purpose of submitting state update
   proposals to the Cosmos SDK Chain instead of Ethereum Relay Module.
+- Currently Ethereum Node is queried directly at the beginning of every block, the better design would be listening to
+  the blocks concurrently.
 - Synchronize queries to the Ethereum to avoid invalid inconsistent state updates due to the timely fetching process.
 - Security checks, at first long-range, replay, or man-in-the-middle attacks on the IBC Relayer, and then on the
   Ethereum Light Client Module.

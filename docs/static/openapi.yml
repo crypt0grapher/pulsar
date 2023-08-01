@@ -34982,7 +34982,9 @@ paths:
                   eth_merkle_root:
                     type: string
                   eth_merkle_proof:
-                    type: string
+                    type: array
+                    items:
+                      type: string
                   eth_block_height:
                     type: string
                   eth_state:
@@ -70670,7 +70672,9 @@ definitions:
       eth_merkle_root:
         type: string
       eth_merkle_proof:
-        type: string
+        type: array
+        items:
+          type: string
       eth_block_height:
         type: string
       eth_state:
@@ -70709,7 +70713,9 @@ definitions:
           eth_merkle_root:
             type: string
           eth_merkle_proof:
-            type: string
+            type: array
+            items:
+              type: string
           eth_block_height:
             type: string
           eth_state:

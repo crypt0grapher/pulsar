@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
+
 	// this line is used by starport scaffolding # 1
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -13,6 +15,8 @@ import (
 
 	"etherlink/x/etherlink/client/cli"
 	"etherlink/x/etherlink/keeper"
+	"etherlink/x/etherlink/merkle_proof_verifier"
+	"etherlink/x/etherlink/rpc_ethereum"
 	"etherlink/x/etherlink/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -91,9 +95,10 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
+	keeper         keeper.Keeper
+	accountKeeper  types.AccountKeeper
+	bankKeeper     types.BankKeeper
+	ethereumClient rpc_ethereum.EthereumClient
 }
 
 func NewAppModule(
@@ -102,11 +107,14 @@ func NewAppModule(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 ) AppModule {
+	provider := "http://localhost:8545"
+	ethereumClient := rpc_ethereum.EthereumClient{provider}
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
 		accountKeeper:  accountKeeper,
 		bankKeeper:     bankKeeper,
+		ethereumClient: ethereumClient,
 	}
 }
 
@@ -141,7 +149,28 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
-	am.keeper.SetEthState(ctx, types.EthState{})
+	ethInput, found := am.keeper.GetEthInput(ctx)
+	am.keeper.Logger(ctx).Info("BeginBlock", "ethInput", ethInput, "found", found)
+	if found {
+		proof, e := am.ethereumClient.Eth_getProof(ethInput.EthAddress, ethInput.EthSlot)
+		am.keeper.Logger(ctx).Info("BeginBlock", "Value", proof, "Error", e)
+		blockNumber, e := am.ethereumClient.Eth_blockNumber()
+		am.keeper.Logger(ctx).Info("BeginBlock", "blockNumber", blockNumber, "Error", e)
+		blockHeader, e := am.ethereumClient.Eth_getBlockByNumber(blockNumber, false)
+		am.keeper.Logger(ctx).Info("BeginBlock", "blockHeader", blockHeader, "Error", e)
+		authentic, e := merkle_proof_verifier.VerifyProof(blockHeader.StateRoot, proof.StorageProof[0].Proof, proof.StorageProof[0].Key, proof.StorageProof[0].Value)
+		am.keeper.Logger(ctx).Info("BeginBlock", "authentic", authentic, "Error", e)
+		if e == nil {
+			am.keeper.SetEthState(ctx, types.EthState{
+				EthAddress:     proof.Address,
+				EthSlot:        proof.StorageProof[0].Key,
+				EthMerkleRoot:  blockHeader.StateRoot,
+				EthMerkleProof: proof.StorageProof[0].Proof,
+				EthBlockHeight: strconv.Itoa(blockNumber),
+				EthState:       proof.StorageProof[0].Value,
+			})
+		}
+	}
 }
 
 // EndBlock contains the logic that is automatically triggered at the end of each block
