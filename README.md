@@ -52,7 +52,7 @@ G[ Users ] <-->| Query State | E
 ```
 
 ## Quick Start
-
+[Go 1.19+](https://go.dev/dl/) and [Ignite CLI](https://docs.ignite.com/welcome/install) are required.
 Point the `ETH_RPC_URL` in `.env` file to your Ethereum node.
 If you are running **Geth** locally, you can keep the default value.
 NB! Nodes should support `eth_getProof`, which excludes Erigon and Reth at least, Infura doesn't support it either.
